@@ -54,21 +54,17 @@
 	ENDW U_TYPE
 
 	DEFW B_TYPE, "B-TYPE"
-	# ( IMM RS2 RS1 FUNCT3 OPCODE -- LINSTRUCTION )
+	# ( IMM RS2 RS1 FUNCT3_OPCODE -- LINSTRUCTION )
 	lw x14, 0(x9)
-	andi x14, x14, 0x7
-	slli x14, x14, 12
-	or x15, x15, x14
-	lw x14, 4(x9)
 	andi x14, x14, 0x1F
 	slli x14, x14, 15
 	or x15, x15, x14
-	lw x14, 8(x9)
+	lw x14, 4(x9)
 	andi x14, x14, 0x1F
 	slli x14, x14, 20
 	or x15, x15, x14
-	lw x14, 12(x9)
-	addi x9, x9, 16
+	lw x14, 8(x9)
+	addi x9, x9, 12
 	# 33222222222211111111110000000000
 	# 10987654321098765432109876543210
 	#                            |  |  $1E
@@ -102,21 +98,17 @@
 	ENDW B_TYPE
 
 	DEFW S_TYPE, "S-TYPE"
-	# ( IMM RS2 RS1 FUNCT3 OPCODE -- LINSTRUCTION )
+	# ( IMM RS2 RS1 FUNCT3_OPCODE -- LINSTRUCTION )
 	lw x14, 0(x9)
-	andi x14, x14, 0x7
-	slli x14, x14, 12
-	or x15, x15, x14
-	lw x14, 4(x9)
 	andi x14, x14, 0x1F
 	slli x14, x14, 15
 	or x15, x15, x14
-	lw x14, 8(x9)
+	lw x14, 4(x9)
 	andi x14, x14, 0x1F
 	slli x14, x14, 20
 	or x15, x15, x14
-	lw x14, 12(x9)
-	addi x9, x9, 16
+	lw x14, 8(x9)
+	addi x9, x9, 12
 	# 33222222222211111111110000000000
 	# 10987654321098765432109876543210
 	#                            |   | $1F
@@ -136,21 +128,17 @@
 	ENDW S_TYPE
 
 	DEFW I_TYPE, "I-TYPE"
-	# ( IMM RS1 FUNCT3 RD OPCODE -- LINSTRUCTION )
+	# ( IMM RS1 RD FUNCT3_OPCODE -- LINSTRUCTION )
 	lw x14, 0(x9)
 	andi x14, x14, 0x1F
 	slli x14, x14, 7
 	or x15, x15, x14
 	lw x14, 4(x9)
-	andi x14, x14, 0x7
-	slli x14, x14, 12
-	or x15, x15, x14
-	lw x14, 8(x9)
 	andi x14, x14, 0x1F
 	slli x14, x14, 15
 	or x15, x15, x14
-	lw x14, 12(x9)
-	addi x9, x9, 16
+	lw x14, 8(x9)
+	addi x9, x9, 12
 	slli x14, x14, 20
 	or x15, x15, x14
 	ret
