@@ -1,0 +1,18 @@
+	DEFW DOTS, ".S"
+	RPUSH x1
+	FC DEPTH
+	LIT '<'
+	FC EMIT, DOT
+	LIT '>'
+	FC EMIT, DEPTH, DUP
+	ZBR 2f
+1:
+	FC SPACE, DUP, PICK, DOT
+	addi x15, x15, -1
+	FC DUP, EQZ
+	ZBR 1b
+2:
+	FC CR
+	RPOP x1
+	TC DROP
+	ENDW DOTS

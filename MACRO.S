@@ -1,0 +1,66 @@
+	.MACRO DEFW LABEL, NAME
+	.PUSHSECTION .rodata.forth_dict
+	NT_\LABEL:
+		.BYTE NLEN_\LABEL
+	NAME_\LABEL:
+		.ASCII "\NAME"
+		.SET NLEN_\LABEL, . - NAME_\LABEL
+		.4BYTE W_\LABEL
+	.POPSECTION
+	.PUSHSECTION .text.forth
+	W_\LABEL:
+	.ENDM
+
+	.MACRO ENDW LABEL
+	.POPSECTION
+	.ENDM
+
+	.MACRO RPUSH REG
+	addi x8, x8, -4
+	sw \REG, 0(x8)
+	.ENDM
+
+	.MACRO RPOP REG
+	lw \REG, 0(x8)
+	addi x8, x8, 4
+	.ENDM
+
+	.MACRO PPUSH REG
+	addi x9, x9, -4
+	sw \REG, 0(x9)
+	.ENDM
+
+	.MACRO PPOP REG
+	lw \REG, 0(x9)
+	addi x9, x9, 4
+	.ENDM
+
+	.MACRO FC NAMES:vararg
+	.IRP NAME, \NAMES
+		CALL W_\NAME
+	.ENDR
+	.ENDM
+
+	.MACRO TC NAME
+		TAIL W_\NAME
+	.ENDM
+
+	.MACRO LIT VALS:vararg
+	.IRP VAL, \VALS
+		PPUSH x15
+		li x15, \VAL
+	.ENDR
+	.ENDM
+
+	.MACRO LAT VALS:vararg
+	.IRP VAL, \VALS
+		PPUSH x15
+		la x15, \VAL
+	.ENDR
+	.ENDM
+
+	.MACRO ZBR DST
+	mv x14, x15
+	PPOP x15
+	beqz x14, \DST
+	.ENDM

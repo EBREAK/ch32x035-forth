@@ -1,0 +1,118 @@
+	.INCLUDE "DEFS.S"
+	.INCLUDE "MACRO.S"
+	.INCLUDE "EARLY.S"
+	.INCLUDE "BOOT.S"
+
+	# register
+	# TOS: x15
+	# RSP: x8
+	# PSP: x9
+	# UP: x4
+
+	.PUSHSECTION .rodata.forth_dict
+_forth_dict_rom_start:
+	.POPSECTION
+
+	.INCLUDE "CORE.S"
+	.INCLUDE "IO.S"
+	.INCLUDE "DEBUG.S"
+	.INCLUDE "STRING.S"
+	#.INCLUDE "ASSEMBLER.S"
+	.INCLUDE "INTERPRET.S"
+	.INCLUDE "TEST.S"
+
+	DEFW ROM_LATEST
+	LAT NT_ROM_LATEST
+	ret
+	ENDW ROM_LATEST
+
+	.PUSHSECTION .rodata.forth_dict
+	.2BYTE 0X0000
+	.POPSECTION
+
+	.PUSHSECTION .bss
+	.P2ALIGN 2, 0
+PSTK_ROOT:
+	.FILL STACK_DEPTH, 4, 0
+PSTK_ROOT_TOP:
+RSTK_ROOT:
+	.FILL STACK_DEPTH, 4, 0
+RSTK_ROOT_TOP:
+WIB_ROOT:
+	.FILL NLEN_MASK, 1, 0
+	.POPSECTION
+
+	.PUSHSECTION .data
+	.P2ALIGN 2, 0
+USER_ROOT:
+	.4BYTE USER_ROOT_END - .
+	.4BYTE USER_ROOT
+	.4BYTE CODE_ROOT
+	.4BYTE TOS_INIT
+	.4BYTE PSTK_ROOT_TOP
+	.4BYTE RSTK_ROOT_TOP
+	.4BYTE PSTK_ROOT_TOP
+	.4BYTE RSTK_ROOT_TOP
+	.4BYTE CODE_ROOT
+	.4BYTE W_EARLY_EMIT
+	.4BYTE W_EARLY_KEYAVA
+	.4BYTE W_EARLY_KEY
+	.4BYTE W_HEXDOT
+	.4BYTE WIB_ROOT
+	.4BYTE 0
+USER_ROOT_END:
+	# RESV SPACE FOR GROW
+	.FILL 8, 4, 0
+	.POPSECTION
+
+	.PUSHSECTION .text
+CODE_ROOT:
+	FC SELFTEST
+	TC REPL
+
+	li x10, USART2_BASE
+1:
+	lw x11, R32_USART_STATR(x10)
+	andi x11, x11, USART_TC
+	beqz x11, 1b
+	li x11, 'F'
+	sw x11, R32_USART_DATAR(x10)
+1:
+	j 1b
+
+forth:
+	# INIT EMPTY FORTH DICT IN SRAM
+	la x10, _forth_dict_end
+	sb zero, -1(x10)
+	sb zero, -2(x10)
+
+	# INIT FORTH CONTEXT
+	la x10, CONTEXT
+	la x11, _forth_dict_end - 2 # DICT IN RAM
+	sw x11, 0(x10)
+	la x11, _forth_dict_rom_start # DICT IN ROM
+	sw x11, 4(x10)
+
+	# clean register
+	li x1, 0
+	# dont clear sp gp
+	li x4, 0
+	li x5, 0
+	li x6, 0
+	li x7, 0
+	li x8, 0
+	li x9, 0
+	li x10, 0
+	li x11, 0
+	li x12, 0
+	li x13, 0
+	li x14, 0
+	li x15, 0
+
+	la x4, USER_ROOT
+	lw x15, USER_TOS(x4)
+	lw x8, USER_RSP(x4)
+	lw x9, USER_PSP(x4)
+	lw x1, USER_SAV(x4)
+	ret
+	.POPSECTION
