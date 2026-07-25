@@ -27,7 +27,7 @@ CONTEXT:
 1:
 	andi x14, x14, NLEN_MASK
 	add x15, x15, x14
-	addi x15, x15, 1 + 4
+	addi x15, x15, 1 + 2
 	lbu x14, 0(x15)
 	lbu x13, 1(x15)
 	slli x13, x13, 8
@@ -209,12 +209,16 @@ CONTEXT:
 	lbu x13, 1(x14)
 	slli x13, x13, 8
 	or x15, x15, x13
-	lbu x13, 2(x14)
-	slli x13, x13, 16
-	or x15, x15, x13
-	lbu x13, 3(x14)
-	slli x13, x13, 24
-	or x15, x15, x13
+	andi x13, x15, 0x1
+	beqz x13, 1f
+	xori x15, x15, 1
+	la x13, _SRAM_START
+	add x15, x15, x13
+	j 2f
+1:
+	la x13, _FLASH_START
+	add x15, x15, x13
+2:
 	ret
 	ENDW NT2CODE
 

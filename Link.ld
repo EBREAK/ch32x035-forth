@@ -14,6 +14,8 @@ MEMORY
 
 SECTIONS
 {
+	PROVIDE( _FLASH_START = ORIGIN(FLASH) );
+	PROVIDE( _SRAM_START = ORIGIN(RAM) );
 	.init :
 	{
 		_sinit = .;
