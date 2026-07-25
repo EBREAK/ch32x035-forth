@@ -1,5 +1,5 @@
 	DEFW J_TYPE, "J-TYPE"
-	# ( OFFSET RD OPCODE -- LINSTRUCTION )
+	# ( IMM RD OPCODE -- LINSTRUCTION )
 	lw x14, 0(x9)
 	andi x14, x14, 0x1F
 	slli x14, x14, 7
@@ -38,4 +38,18 @@
 	or x15, x15, x13
 	ret
 	ENDW J_TYPE
+
+	DEFW U_TYPE, "U-TYPE"
+	# ( IMM RD OPCODE -- LINSTRUCTION )
+	lw x14, 0(x9)
+	andi x14, x14, 0x1F
+	slli x14, x14, 7
+	or x15, x15, x14
+	lw x14, 4(x9)
+	li x13, 0xFFFFF000
+	and x14, x14, x13
+	or x15, x15, x14
+	addi x9, x9, 8
+	ret
+	ENDW U_TYPE
 
