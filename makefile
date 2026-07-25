@@ -11,7 +11,7 @@ CFLAGS += \
 
 fw:
 	$(CC) $(CFLAGS) FORTH.S -o fw.elf
-	$(OD) -s -D fw.elf > fw.dis
+	$(OD) -D fw.elf > fw.dis
 	$(OC) -O ihex fw.elf fw.hex
 	$(OC) -O binary fw.elf fw.bin
 	$(SZ) fw.elf
