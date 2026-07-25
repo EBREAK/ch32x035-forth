@@ -134,3 +134,24 @@
 	or x15, x15, x13
 	ret
 	ENDW S_TYPE
+
+	DEFW I_TYPE, "I-TYPE"
+	# ( IMM RS1 FUNCT3 RD OPCODE -- LINSTRUCTION )
+	lw x14, 0(x9)
+	andi x14, x14, 0x1F
+	slli x14, x14, 7
+	or x15, x15, x14
+	lw x14, 4(x9)
+	andi x14, x14, 0x7
+	slli x14, x14, 12
+	or x15, x15, x14
+	lw x14, 8(x9)
+	andi x14, x14, 0x1F
+	slli x14, x14, 15
+	or x15, x15, x14
+	lw x14, 12(x9)
+	addi x9, x9, 16
+	slli x14, x14, 20
+	or x15, x15, x14
+	ret
+	ENDW I_TYPE
