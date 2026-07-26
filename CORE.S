@@ -59,6 +59,7 @@
 	ENDW OVER
 
 	DEFW ROT, "ROT"
+	# ( A B C -- B C A )
 	mv x14, x15
 	lw x13, 0(x9)
 	lw x15, 4(x9)
@@ -66,6 +67,16 @@
 	sw x14, 0(x9)
 	ret
 	ENDW ROT
+
+	DEFW NROT, "-ROT"
+	# ( A B C -- C A B )
+	mv x14, x15
+	lw x15, 0(x9)
+	lw x13, 4(x9)
+	sw x13, 0(x9)
+	sw x14, 4(x9)
+	ret
+	ENDW NROT
 
 	DEFW PICK, "PICK"
 	slli x14, x15, 2
