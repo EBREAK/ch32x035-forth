@@ -1,3 +1,19 @@
+	.IRP VAL, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
+		DEFW 0X\VAL, "$\VAL"
+		LIT 0X\VAL
+		ret
+		ENDW 0X\VAL
+	.ENDR
+
+	.IRP HI, 1
+		.IRP LO, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
+			DEFW 0X\HI\LO, "$\HI\LO"
+			LIT 0X\HI\LO
+			ret
+			ENDW 0X\HI\LO
+		.ENDR
+	.ENDR
+
 	DEFW NOOP, "NOOP"
 	ret
 	ENDW NOOP
