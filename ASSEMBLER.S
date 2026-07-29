@@ -447,3 +447,102 @@
 	or x15, x15, x13
 	ret
 	ENDW CB_TYPE
+
+	DEFW CA_TYPE, "CA-TYPE"
+	# ( RD|RS1 RS2 FUNCT6_FUNCT2_OPCODE -- WINSTRUCTION )
+	lw x14, 0(x9)
+	addi x14, x14, -8
+	andi x14, x14, 0x7
+	slli x14, x14, 2
+	or x15, x15, x14
+	lw x14, 4(x9)
+	addi x14, x14, -8
+	andi x14, x14, 0x7
+	slli x14, x14, 7
+	or x15, x15, x14
+	lw x14, 8(x9)
+	addi x9, x9, 8
+	ret
+	ENDW CA_TYPE
+
+	DEFW CSW_TYPE, "CSW-TYPE"
+	# ( IMM RS1 RS2 FUNCT3_OPCODE -- WINSTRUCTION )
+	lw x14, 0(x9)
+	addi x14, x14, -8
+	andi x14, x14, 0x7
+	slli x14, x14, 2
+	or x15, x15, x14
+	lw x14, 4(x9)
+	addi x14, x14, -8
+	andi x14, x14, 0x7
+	slli x14, x14, 7
+	or x15, x15, x14
+	lw x14, 8(x9)
+	addi x9, x9, 12
+	# 1111110000000000
+	# 5432109876543210
+	#           ^  ^   # $4
+	#          ^       # $40
+	andi x13, x14, 0x4
+	slli x13, x13, 4
+	or x15, x15, x13
+	# 1111110000000000
+	# 5432109876543210
+	#           | |    # $38
+	#    | |           # $1C00
+	andi x13, x14, 0x38
+	slli x13, x13, 7
+	or x15, x15, x13
+	# 1111110000000000
+	# 5432109876543210
+	#          ^       # $40
+	#           ^      # $20
+	andi x13, x14, 0x40
+	srli x13, x13, 1
+	or x15, x15, x13
+	ret
+	ENDW CSW_TYPE
+
+	DEFW CLW_TYPE, "CLW-TYPE"
+	# ( IMM RS1 RS2 FUNCT3_OPCODE -- WINSTRUCTION )
+	TC CSW_TYPE
+	ENDW CLW_TYPE
+
+	DEFW CI_TYPE, "CI-TYPE"
+	# ( IMM RD|RS1 FUNCT3_OPCODE -- WINSTRUCTION )
+	lw x14, 0(x9)
+	andi x14, x14, 0x1F
+	slli x14, x14, 7
+	or x15, x15, x14
+	lw x14, 4(x9)
+	addi x9, x9, 8
+	# 1111110000000000
+	# 5432109876543210
+	#            |   | # $1F
+	#          |   |   # $7C
+	andi x13, x14, 0x1F
+	slli x13, x13, 2
+	or x15, x15, x13
+	# 1111110000000000
+	# 5432109876543210
+	#           ^      # $20
+	#    ^             # $1000
+	andi x13, x14, 0x20
+	slli x13, x13, 7
+	or x15, x15, x13
+	ret
+	ENDW CI_TYPE
+
+	DEFW CR_TYPE, "CR-TYPE"
+	# ( RD|RS1 RS2 FUNCT4_OPCODE -- WINSTRUCTION )
+	lw x14, 0(x9)
+	andi x14, x14, 0x1F
+	slli x14, x14, 2
+	or x15, x15, x14
+	lw x14, 4(x9)
+	andi x14, x14, 0x1F
+	slli x14, x14, 7
+	or x15, x15, x14
+	addi x9, x9, 8
+	ret
+	ENDW CR_TYPE
