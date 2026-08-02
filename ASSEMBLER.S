@@ -401,6 +401,73 @@
 	ret
 	ENDW CJ_TYPE
 
+	DEFW DIS_CJ_TYPE, "DIS-CJ-TYPE"
+	# ( WINSTRUCTION -- IMM FUNCT3_OPCODE )
+	# 1111110000000000
+	# 5432109876543210
+	#           | |    # $38
+	#             | |  # $E
+	andi x14, x15, 0x38
+	srli x14, x14, 2
+	# 1111110000000000
+	# 5432109876543210
+	#     ^            # $800
+	#            ^     # $10
+	srli x13, x15, 7
+	andi x13, x13, 0x10
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#              ^   # $4
+	#           ^      # $20
+	andi x13, x15, 0x4
+	slli x13, x13, 3
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#         ^        # $80
+	#          ^       # $40
+	andi x13, x15, 0x80
+	srli x13, x13, 1
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#          ^       # $40
+	#         ^        # $80
+	andi x13, x15, 0x40
+	slli x13, x13, 1
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#      ||          # $600
+	#       ||         # $300
+	andi x13, x15, 0x600
+	srli x13, x13, 1
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#        ^         # $100
+	#      ^           # $400
+	andi x13, x15, 0x100
+	slli x13, x13, 2
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#    ^             # $1000
+	#     ^            # $800
+	li x12, 0x1000
+	and x13, x15, x12
+	beqz x13, 1f
+	li x13, 0xFFFFF800
+1:
+	or x14, x14, x13
+	addi x9, x9, -4
+	sw x14, 0(x9)
+	li x14, 0xE003
+	and x15, x15, x14
+	ret
+	ENDW DIS_CJ_TYPE
+
 	DEFW CB_TYPE, "CB-TYPE"
 	# ( IMM RD|RS1 FUNCT3_OPCODE -- WINSTURCTION )
 	lw x14, 0(x9)
@@ -448,6 +515,56 @@
 	ret
 	ENDW CB_TYPE
 
+	DEFW DIS_CB_TYPE, "DIS-CB-TYPE"
+	# ( WINSTRUCTION -- IMM RD|RS1 FUNCT3_OPCODE )
+	addi x9, x9, -8
+	srli x14, x15, 7
+	andi x14, x14, 0x7
+	addi x14, x14, 8
+	sw x14, 0(x9)
+	# 1111110000000000
+	# 5432109876543210
+	#            ||    # $18
+	#              ||  # $6
+	andi x14, x15, 0x18
+	srli x14, x14, 2
+	# 1111110000000000
+	# 5432109876543210
+	#     ||           # $C00
+	#            ||    # $18
+	srli x13, x15, 7
+	andi x13, x13, 0x18
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#              ^   # $4
+	#           ^      # $20
+	andi x13, x15, 0x4
+	slli x13, x13, 3
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#          ||      # $60
+	#         ||       # $C0
+	andi x13, x15, 0x60
+	slli x13, x13, 1
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#    ^             # $1000
+	#        ^         # $100
+	srli x13, x15, 4
+	andi x13, x13, 0x100
+	beqz x13, 1f
+	li x13, 0xFFFFFF00
+1:
+	or x14, x14, x13
+	sw x14, 4(x9)
+	li x14, 0xE003
+	and x15, x15, x14
+	ret
+	ENDW DIS_B_TYPE
+
 	DEFW CA_TYPE, "CA-TYPE"
 	# ( RD|RS1 RS2 FUNCT6_FUNCT2_OPCODE -- WINSTRUCTION )
 	lw x14, 0(x9)
@@ -465,6 +582,22 @@
 	ret
 	ENDW CA_TYPE
 
+	DEFW DIS_CA_TYPE, "DIS-CA-TYPE"
+	# ( WINSTRUCTION -- RD|RS1 RS2 FUNCT6_FUNCT2_OPCODE )
+	addi x9, x9, -8
+	srli x14, x15, 2
+	andi x14, x14, 0x7
+	addi x14, x14, 8
+	sw x14, 0(x9)
+	srli x14, x15, 7
+	andi x14, x14, 0x7
+	addi x14, x14, 8
+	sw x14, 4(x9)
+	li x14, 0xFC63
+	and x15, x15, x14
+	ret
+	ENDW DIS_CA_TYPE
+
 	DEFW CSW_TYPE, "CSW-TYPE"
 	# ( IMM RS1 RS2 FUNCT3_OPCODE -- WINSTRUCTION )
 	lw x14, 0(x9)
@@ -481,7 +614,7 @@
 	addi x9, x9, 12
 	# 1111110000000000
 	# 5432109876543210
-	#           ^  ^   # $4
+	#              ^   # $4
 	#          ^       # $40
 	andi x13, x14, 0x4
 	slli x13, x13, 4
@@ -503,10 +636,52 @@
 	ret
 	ENDW CSW_TYPE
 
+	DEFW DIS_CSW_TYPE, "DIS-CSW-TYPE"
+	# ( WINSTRUCTION -- IMM RS1 RS2 FUNCT3_OPCODE )
+	addi x9, x9, -12
+	srli x14, x15, 2
+	andi x14, x14, 0x7
+	addi x14, x14, 8
+	sw x14, 0(x9)
+	srli x14, x15, 7
+	andi x14, x14, 0x7
+	addi x14, x14, 8
+	sw x14, 4(x9)
+	# 1111110000000000
+	# 5432109876543210
+	#          ^       # $40
+	#              ^   # $4
+	andi x14, x15, 0x40
+	srli x14, x14, 4
+	# 1111110000000000
+	# 5432109876543210
+	#    | |           # $1C00
+	#           | |    # $38
+	srli x13, x15, 7
+	andi x13, x13, 0x38
+	or x14, x14, x13
+	# 1111110000000000
+	# 5432109876543210
+	#           ^      # $20
+	#          ^       # $40
+	andi x13, x15, 0x20
+	slli x13, x13, 1
+	or x14, x14, x13
+	sw x14, 8(x9)
+	li x14, 0xE003
+	and x15, x15, x14
+	ret
+	ENDW DIS_CSW_TYPE
+
 	DEFW CLW_TYPE, "CLW-TYPE"
-	# ( IMM RS1 RS2 FUNCT3_OPCODE -- WINSTRUCTION )
+	# ( IMM RS1 RD FUNCT3_OPCODE -- WINSTRUCTION )
 	TC CSW_TYPE
 	ENDW CLW_TYPE
+
+	DEFW DIS_CLW_TYPE, "DIS-CLW-TYPE"
+	# ( WINSTRUCTION -- IMM RS1 RD FUNCT3_OPCODE )
+	TC DIS_CSW_TYPE
+	ENDW DIS_CLW_TYPE
 
 	DEFW CI_TYPE, "CI-TYPE"
 	# ( IMM RD|RS1 FUNCT3_OPCODE -- WINSTRUCTION )
@@ -533,6 +708,34 @@
 	ret
 	ENDW CI_TYPE
 
+	DEFW DIS_CI_TYPE, "DIS-CI-TYPE"
+	# ( WINSTRUCTION -- IMM RD|RS1 FUNCT3_OPCODE )
+	addi x9, x9, -8
+	srli x14, x15, 7
+	andi x14, x14, 0x1F
+	sw x14, 0(x9)
+	# 1111110000000000
+	# 5432109876543210
+	#          |   |   # $7C
+	#            |   | # $1F
+	andi x14, x15, 0x7C
+	srli x14, x14, 2
+	# 1111110000000000
+	# 5432109876543210
+	#    ^             # $1000
+	#           ^      # $20
+	srli x13, x15, 7
+	andi x13, x13, 0x20
+	beqz x13, 1f
+	li x13, 0xFFFFFFE0
+1:
+	or x14, x14, x13
+	sw x14, 4(x9)
+	li x14, 0xE003
+	and x15, x15, x14
+	ret
+	ENDW DIS_CI_TYPE
+
 	DEFW CR_TYPE, "CR-TYPE"
 	# ( RD|RS1 RS2 FUNCT4_OPCODE -- WINSTRUCTION )
 	lw x14, 0(x9)
@@ -546,3 +749,17 @@
 	addi x9, x9, 8
 	ret
 	ENDW CR_TYPE
+
+	DEFW DIS_CR_TYPE, "DIS-CR-TYPE"
+	# ( WINSTRUCTION -- RD|RS1 RS2 FUNCT4_OPCODE )
+	addi x9, x9, -8
+	srli x14, x15, 2
+	andi x14, x14, 0x1F
+	sw x14, 0(x9)
+	srli x14, x15, 7
+	andi x14, x14, 0x1F
+	sw x14, 4(x9)
+	li x14, 0xF003
+	and x15, x15, x14
+	ret
+	ENDW DIS_CR_TYPE
