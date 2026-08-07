@@ -483,6 +483,15 @@ FORTH_DP:
 	TC LSTORE
 	ENDW LCOMMA
 
+	DEFW ALLOT, "ALLOT"
+	la x14, FORTH_DP
+	lw x13, 0(x14)
+	add x13, x13, x15
+	sw x13, 0(x14)
+	PPOP x15
+	ret
+	ENDW ALLOT
+
 	DEFW EXECUTE, "EXECUTE"
 	mv x14, x15
 	PPOP x15
