@@ -454,6 +454,35 @@ FORTH_DP:
 	TC LSTORE
 	ENDW STORE
 
+	DEFW CCOMMA, "C,"
+	mv x14, x15
+	PPOP x15
+	la x13, FORTH_DP
+	lw x12, 0(x13)
+	sb x14, 0(x12)
+	addi x12, x12, 1
+	sw x12, 0(x13)
+	ret
+	ENDW CCOMMA
+
+	DEFW WCOMMA, "W,"
+	PPUSH x15
+	la x13, FORTH_DP
+	lw x15, 0(x13)
+	add x12, x15, 2
+	sw x12, 0(x13)
+	TC WSTORE
+	ENDW WCOMMA
+
+	DEFW LCOMMA, "L,"
+	PPUSH x15
+	la x13, FORTH_DP
+	lw x15, 0(x13)
+	add x12, x15, 4
+	sw x12, 0(x13)
+	TC LSTORE
+	ENDW LCOMMA
+
 	DEFW EXECUTE, "EXECUTE"
 	mv x14, x15
 	PPOP x15
