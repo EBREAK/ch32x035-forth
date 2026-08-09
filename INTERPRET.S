@@ -250,7 +250,7 @@ REPL_STACK_CHK:
 	addi x14, x14, -(STACK_DEPTH * 4)
 	bge x14, x9, REPL_STACK_ERROR
 	lw x14, USER_RS0(x4)
-	blt x14, x9, REPL_STACK_ERROR
+	blt x14, x8, REPL_STACK_ERROR
 	addi x14, x14, -(STACK_DEPTH * 4)
 	bge x14, x8, REPL_STACK_ERROR
 	TC REPL
