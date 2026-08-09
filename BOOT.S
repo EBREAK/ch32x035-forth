@@ -211,13 +211,14 @@ handle_reset:
 	/* Enable interrupt nesting and hardware stack */
 	li t0, 0x3
 	csrw 0x804, t0
+	/* Configure the interrupt vector table recognition mode and entry address mode */
+	la t0, _vector_base
+	ori t0, t0, 3
+	csrw mtvec, t0
 	/* Enable global interrupt and configure privileged mode */
 	li t0, 0x88           
 	csrw mstatus, t0
-	/* Configure the interrupt vector table recognition mode and entry address mode */
-	la t0, _vector_base
-	ori t0, t0, 3           
-	csrw mtvec, t0
+
 
 	jal EARLY_INIT
 	la t0, forth
