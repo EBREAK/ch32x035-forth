@@ -1215,3 +1215,50 @@
 	LIT 0X9002
 	TC WCOMMA
 	ENDW W_EBREAK
+
+	DEFW CALL, "CALL,"
+	# ( ADDR -- )
+	# L.JALR,          : x0 +/- 2046    x0 +/- ~2KiB
+	add x14, x0, 0x7FE
+	bgt x15, x14, 1f
+	LIT 0X0 0X1
+	TC L_JALR
+1:
+	# W.JAL,           : +/- 2046        +/- ~2KiB
+	# L.JAL,           : +/- 1048574     +/- ~1MiB
+	# L.AUIPC, L.JALR, : +/- 2147483646  +/- ~2GiB
+	la x14, FORTH_DP
+	lw x14, 0(x14)
+	sub x15, x15, x14
+	mv x14, x15
+	bgtz x14, 1f
+	xori x14, x14, -1
+	addi x14, x14, 1
+1:
+	li x13, 0x7FE
+	bgt x14, x13, 1f
+	TC W_JAL
+1:
+	li x13, 0xFFFFE
+	bgt x14, x13, 1f
+	LIT 0x1
+	TC L_JAL
+1:
+	li x13, 0x7FFFFFFE
+	bgt x14, x13, 1f
+	# : FAR-CALL, ( ADDR -- ) HERE - DUP $800 + $FFF INVERT AND DUP $1 L.AUIPC, - $1 DUP L.JALR, ;
+	RPUSH x1
+	FC DUP
+	LIT 0X800
+	FC PLUS
+	LIT 0XFFF
+	FC INVERT AND DUP
+	LIT 0X1
+	FC L_AUIPC MINUS
+	LIT 0X1
+	FC DUP
+	RPOP x1
+	TC L_JALR
+1:
+	j 1b # TODO: PRINT A ERROR THEN CALL ABORT
+	ENDW CALL
