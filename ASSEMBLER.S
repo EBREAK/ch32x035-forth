@@ -1328,3 +1328,19 @@
 1:
 	TC L_SW
 	ENDW SW
+
+	DEFW LW, "LW,"
+	# ( IMM RS1 RD -- )
+	addi x14, x15, -8
+	li x13, 7
+	bgtu x14, x13, 1f
+	lw x14, 0(x9)
+	addi x14, x14, -8
+	bgtu x14, x13, 1f
+	lw x14, 4(x9)
+	andi x13, x14, 0b1111100
+	bne x13, x14, 1f
+	TC W_LW
+1:
+	TC L_LW
+	ENDW LW
