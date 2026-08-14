@@ -7,7 +7,9 @@
 	# TOS: x15
 	# RSP: x8
 	# PSP: x9
-	# UP: x4
+	# UP:  x4
+
+	# TAIL TEMP REGISTER: x31 (ONLY USE FOR GENERATE LONG JMP)
 
 	.PUSHSECTION .rodata.forth_dict
 _forth_dict_rom_start:
