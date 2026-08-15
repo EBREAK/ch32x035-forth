@@ -16,3 +16,28 @@
 	RPOP x1
 	TC DROP
 	ENDW DOTS
+
+	DEFW QUEST, "?"
+	RPUSH x1
+	FC LOAD
+	RPOP x1
+	TC HEXDOT
+	ENDW QUEST
+
+	DEFW DUMP, "DUMP"
+	# ( ADDR COUNT -- )
+	RPUSH x1
+	FC DUP
+	ZBR 2f
+1:
+	FC OVER, QUEST, SPACE
+	addi x15, x15, -1
+	lw x14, 0(x9)
+	addi x14, x14, 4
+	sw x14, 0(x9)
+	FC DUP, EQZ
+	ZBR 1b
+2:
+	RPOP x1
+	TC 2DROP
+	ENDW DUMP
