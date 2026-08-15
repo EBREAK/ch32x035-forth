@@ -1344,3 +1344,20 @@
 1:
 	TC L_LW
 	ENDW LW
+
+	DEFW ADDI, "ADDI,"
+	# ( IMM RS1 RD -- )
+	lw x14, 0(x9)
+	bne x14, x15, 1f
+	lw x14, 4(x9)
+	beqz x14, 1f
+	srai x13, x14, 31
+	add x14, x14, x13
+	xor x14, x14, x13
+	andi x13, x14, 0b11111
+	bne x13, x14, 1f
+	addi x9, x9, 4
+	TC W_ADDI
+1:
+	TC L_ADDI
+	ENDW ADDI
