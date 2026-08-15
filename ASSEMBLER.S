@@ -1361,3 +1361,56 @@
 1:
 	TC L_ADDI
 	ENDW ADDI
+
+	DEFW BEQ, "BEQ,"
+	# ( OFFSET RS2 RS1 -- )
+	lw x14, 4(x9)
+	srai x13, x14, 31
+	add x14, x14, x13
+	xor x14, x14, x13
+	andi x13, x14, 0b11111110
+	bne x13, x14, 2f
+	lw x14, 0(x9)
+	sltiu x13, x15, 1
+	sltiu x12, x14, 1
+	xor x12, x12, x13
+	beqz x12, 2f
+	beqz x14, 1f
+	mv x15, x14
+1:
+	addi x14, x15, -8
+	sltiu x14, x14, 8
+	beqz x14, 2f
+	addi x9, x9, 4
+	TC W_BEQZ
+2:
+	TC L_BEQ
+	ENDW BEQ
+	
+
+
+	DEFW BNE, "BNE,"
+	# ( OFFSET RS2 RS1 -- )
+	lw x14, 4(x9)
+	srai x13, x14, 31
+	add x14, x14, x13
+	xor x14, x14, x13
+	andi x13, x14, 0b11111110
+	bne x13, x14, 2f
+	lw x14, 0(x9)
+	sltiu x13, x15, 1
+	sltiu x12, x14, 1
+	xor x12, x12, x13
+	beqz x12, 2f
+	beqz x14, 1f
+	mv x15, x14
+1:
+	addi x14, x15, -8
+	sltiu x14, x14, 8
+	beqz x14, 2f
+	addi x9, x9, 4
+	TC W_BNEZ
+2:
+	TC L_BNE
+	ENDW BNE
+
