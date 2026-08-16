@@ -27,4 +27,3 @@ flash:
 	wlink set-power disable3v3
 	sleep 0.5
 	wlink set-power enable3v3
-	wlink resume
