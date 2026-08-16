@@ -205,6 +205,9 @@ handle_reset:
 	addi a0, a0, 4
 	bltu a0, a1, 1b
 2:
+
+	jal EARLY_INIT
+
 	/* Configure pipelining and instruction prediction */
 	li t0, 0x1f
 	csrw 0xbc0, t0
@@ -219,8 +222,6 @@ handle_reset:
 	li t0, 0x88           
 	csrw mstatus, t0
 
-
-	jal EARLY_INIT
 	la t0, forth
 	csrw mepc, t0
 	mret

@@ -1,7 +1,30 @@
 	.PUSHSECTION .text.early
 EARLY_INIT:
+	li x10, FLASH_BASE
+
+	# IMPORTANT
+SET_FLASH_LATENCY:
+	lw x11, R32_FLASH_ACTLR(x10)
+	andi x11, x11, ~(FLASH_LATENCY_MASK)
+	sw x11, R32_FLASH_ACTLR(x10)
+	nop
+	nop
+	nop
+	nop
+	or x11, x11, FLASH_LATENCY_2
+	sw x11, R32_FLASH_ACTLR(x10)
+	nop
+	nop
+	nop
+	nop
+
 	li x10, RCC_BASE
+WAIT_HSIRDY:
+	lw x11, R32_RCC_CTLR(x10)
+	andi x11, x11, RCC_HSIRDY
+	beqz x11, WAIT_HSIRDY
 	# HSI 48Mhz
+
 SET_HPRE:
 	lw x11, R32_RCC_CFGR0(x10)
 	andi x11, x11, ~(RCC_HPRE_MASK)
@@ -34,6 +57,7 @@ DEASSERT_USART2_RST:
 	li x12, ~(RCC_USART2RST)
 	and x11, x11, x12
 	sw x11, R32_RCC_APB1PRSTR(x10)
+
 
 USART2_CLK_ON:
 	lw x11, R32_RCC_APB1PCENR(x10)
