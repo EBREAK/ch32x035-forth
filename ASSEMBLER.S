@@ -1414,3 +1414,28 @@
 	TC L_BNE
 	ENDW BNE
 
+	DEFW LI, "LI,"
+	# ( VAL RD -- )
+	# L.ADDI,          : x0 +2047/-2048
+	lw x14, 0(x9)
+	li x13, -2048
+	slt x12, x14, x13
+	li x13, 2047
+	slt x11, x13, x14
+	or x12, x11, x12
+	bnez x12, 1f
+	PPUSH x0
+	TC L_ADDI
+1:
+	# L.LUI, L.ADDI,  : x0 >= +2048/<= -2049
+	# : HUGE-LI, ( VAL RD ) OVER $800 + $FFF INVERT AND DUP >R OVER LUI, R> ROT SWAP - SWAP DUP ADDI, ;
+	RPUSH x1
+	FC OVER
+	LIT 0X800
+	FC PLUS
+	LIT 0XFFF
+	FC INVERT, AND, DUP, TOR, OVER, L_LUI
+	FC FROMR, ROT, SWAP, MINUS, SWAP, DUP
+	RPOP x1
+	TC L_ADDI
+	ENDW LI
