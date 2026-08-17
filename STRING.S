@@ -115,3 +115,32 @@
 	bnez x14, 1b
 	ret
 	ENDW TONUMBER
+
+	DEFW MEMCPY, "MEMCPY"
+	# ( C-ADDR1 C-ADDR2 COUNT -- )
+	# If count is zero, no memory is accessed and the operation
+	# has no effect.
+	# If count is greater than zero, copy count consecutive
+	# characters from the memory region beginning at c-addr2 to
+	# the memory region beginning at c-addr1. The copy proceeds
+	# character by character from lower addresses to higher
+	# addresses.
+	# Unlike CMOVE>, MEMCPY does not handle overlapping memory
+	# regions; if the source and destination overlap, the result
+	# is undefined.
+	mv x14, x15
+	lw x13, 0(x9)
+	lw x12, 4(x9)
+	lw x15, 8(x9)
+	addi x9, x9, 12
+	beqz x14, 2f
+1:
+	lbu x11, 0(x13)
+	sb x11, 0(x12)
+	addi x12, x12, 1
+	addi x13, x13, 1
+	addi x14, x14, -1
+	bnez x14, 1b
+2:
+	ret
+	ENDW MEMCPY
