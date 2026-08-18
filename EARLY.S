@@ -65,6 +65,7 @@ USART2_CLK_ON:
 	or x11, x11, x12
 	sw x11, R32_RCC_APB1PCENR(x10)
 
+	/*
 	li x10, GPIOB_BASE
 LED_PIN_MODE:
 	lw x11, R32_GPIO_CFGHR(x10)
@@ -77,6 +78,7 @@ LED_PIN_MODE:
 LED_PIN_HIGH:
 	li x11, (1 << 12)
 	sw x11, R32_GPIO_BSHR(x10)
+	*/
 
 	li x10, GPIOA_BASE
 
