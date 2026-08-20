@@ -398,6 +398,24 @@ FORTH_DP:
 	ret
 	ENDW PAD
 
+	DEFW WALIGN, "WALIGN"
+	la x14, FORTH_DP
+	lw x13, 0(x14)
+	addi x13, x13, 1
+	andi x13, x13, -2
+	sw x13, 0(x14)
+	ret
+	ENDW WALIGN
+
+	DEFW LALIGN, "LALIGN"
+	la x14, FORTH_DP
+	lw x13, 0(x14)
+	addi x13, x13, 3
+	andi x13, x13, -4
+	sw x13, 0(x14)
+	ret
+	ENDW LALIGN
+
 	DEFW CSTORE, "C!"
 	mv x14, x15
 	lw x13, 0(x9)
