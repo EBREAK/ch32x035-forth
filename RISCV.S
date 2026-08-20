@@ -1,0 +1,23 @@
+	DEFW MSTATUSLOAD, "MSTATUS@"
+	PPUSH x15
+	csrr x15, mstatus
+	ret
+	ENDW MSTATUSLOAD
+
+	DEFW MSTATUSSTORE, "MSTATUS!"
+	csrw mstatus, x15
+	PPOP x15
+	ret
+	ENDW MSTATUSSTORE
+
+	DEFW MTVECLOAD, "MTVEC@"
+	PPUSH x15
+	csrr x15, mtvec
+	ret
+	ENDW MTVECLOAD
+
+	DEFW MTVECSTORE, "MTVEC!"
+	csrw mtvec, x15
+	PPOP x15
+	ret
+	ENDW MTVECSTORE
