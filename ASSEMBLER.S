@@ -1502,3 +1502,9 @@
 	RPOP x1
 	TC L_BEQ
 	ENDW ZBR
+
+	DEFW RET, "RET,"
+	# ( -- )
+	LIT 0x1
+	TC W_JR
+	ENDW RET
