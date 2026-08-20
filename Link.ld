@@ -26,12 +26,6 @@ SECTIONS
 		_einit = .;
 	} >FLASH AT>FLASH
 
-	.vector :
-	{
-		*(.vector);
-		. = ALIGN(64);
-	} >FLASH AT>FLASH
-
 	.text :
 	{
 		. = ALIGN(4);
@@ -138,6 +132,7 @@ SECTIONS
     	*(.srodata.cst4)
     	*(.srodata.cst2)
     	*(.srodata .srodata.*)
+	*(.vector)
     	. = ALIGN(4);
 		PROVIDE( _edata = .);
 	} >RAM AT>FLASH
