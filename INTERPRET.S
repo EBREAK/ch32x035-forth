@@ -362,6 +362,38 @@ CONTEXT:
 	TC NT2CODE
 	ENDW TICK
 
+	IDEFW PAREN, "("
+	RPUSH x1
+1:
+	LIT ')'
+	FC KEY, EQ
+	ZBR 1b
+	RPOP x1
+	ret
+	ENDW PAREN
+
+	DEFW ISNEWLINE, "NEWLINE?"
+	# ( VAL -- FLAG )
+	mv x14, x15
+	li x15, -1
+	xor x13, x14, '\r'
+	beqz x13, 1f
+	xor x13, x14, '\n'
+	beqz x13, 1f
+	li x15, 0
+1:
+	ret
+	ENDW ISNEWLINE
+
+	IDEFW BACKSLASH, "\\"
+	RPUSH x1
+1:
+	FC KEY, ISNEWLINE
+	ZBR 1b
+	RPOP x1
+	ret
+	ENDW BACKSLASH
+
 	DEFW REPL, "REPL"
 	FC TOKEN, WIB, WIN, LOAD, FIND, DUP
 	ZBR REPL_TRY_NUMBER
