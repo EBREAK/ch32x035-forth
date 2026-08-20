@@ -219,7 +219,7 @@ handle_reset:
 	ori t0, t0, 3
 	csrw mtvec, t0
 	/* Enable global interrupt and configure privileged mode */
-	li t0, 0x88           
+	li t0, (MSTATUS_MPP_MACHINE | MSTATUS_MPIE | MSTATUS_MIE)
 	csrw mstatus, t0
 
 	la t0, forth
