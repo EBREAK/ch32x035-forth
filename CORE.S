@@ -522,6 +522,18 @@ FORTH_DP:
 	ret
 	ENDW UPLOAD
 
+	DEFW PSPLOAD, "PSP@"
+	PPUSH x15
+	mv x15, x9
+	ret
+	ENDW PSPLOAD
+
+	DEFW RSPLOAD, "RSP@"
+	PPUSH x15
+	mv x15, x8
+	ret
+	ENDW RSPLOAD
+
 	DEFW PAUSE, "PAUSE"
 	sw x1, USER_RAS(x4)
 	sw x15, USER_TOS(x4)
