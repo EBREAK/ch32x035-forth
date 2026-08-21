@@ -1,0 +1,66 @@
+	.PUSHSECTION .bss
+	.P2ALIGN 2, 0
+TICKS:
+	.8BYTE 0
+	.POPSECTION
+
+	.PUSHSECTION .text
+	.P2ALIGN 2, 0
+ISR_SYSTICK:
+	li x14, SYSTICK_BASE
+	la x13, TICKS
+	sw zero, R32_SYSTICK_SR(x14)
+	lw x12, 0(x13)
+	lw x11, 4(x13)
+	addi x12, x12, 1
+	bnez x12, 1f
+	addi x11, x11, 1
+	sw x11, 4(x13)
+1:
+	sw x12, 0(x13)
+	mret
+	.POPSECTION
+
+	DEFW TICKSLOAD, "TICKS@"
+	# ( -- HI LO )
+	la x14, TICKS
+	lw x13, 4(x14)
+1:
+	lw x12, 0(x14)
+	lw x11, 4(x14)
+	bne x11, x13, 2f
+	addi x9, x9, -8
+	sw x15, 4(x9)
+	sw x13, 0(x9)
+	mv x15, x12
+	ret
+2:
+	mv x13, x11
+	j 1b
+	ENDW TICKSLOAD
+	
+	DEFW SYSTICK_INIT, "SYSTICK-INIT"
+	# ( TICKSHI TICKSLO -- )
+	RPUSH x1
+	FC IRQN_SYSTICK, PFIC_IRQ_DIS
+	mv x14, x15
+	lw x13, 0(x9)
+	lw x15, 4(x9)
+	addi x9, x9, 8
+	li x12, SYSTICK_BASE
+	sw x0, R32_SYSTICK_SR(x12)
+	sw x0, R32_SYSTICK_CNTL(x12)
+	sw x0, R32_SYSTICK_CNTH(x12)
+	sw x14, R32_SYSTICK_CMPL(x12)
+	sw x13, R32_SYSTICK_CMPH(x12)
+	fence iorw,iorw
+	li x11, (SYSTICK_STRE | SYSTICK_STCLK_HCLK | SYSTICK_STIE | SYSTICK_STE)
+	sw x11, R32_SYSTICK_CTLR(x12)
+	LAT ISR_SYSTICK
+	FC IRQN_SYSTICK, ISR_VECTAB_STORE
+	FC IRQN_SYSTICK, PFIC_IRQ_EN
+	RPOP x1
+	ret
+	ENDW SYSTICK_INIT
+
+	

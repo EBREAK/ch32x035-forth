@@ -17,7 +17,7 @@ _start:
 	j	handle_reset
 
     .section    .vector,"ax",@progbits
-    .align  1
+    .p2align 2
 _vector_base:
     .option norvc;
     .word   _start
@@ -218,9 +218,13 @@ handle_reset:
 	la t0, _vector_base
 	ori t0, t0, 3
 	csrw mtvec, t0
+	fence iorw, iorw
+	fence.i
 	/* Enable global interrupt and configure privileged mode */
 	li t0, (MSTATUS_MPP_MACHINE | MSTATUS_MPIE | MSTATUS_MIE)
 	csrw mstatus, t0
+	fence iorw, iorw
+	fence.i
 
 	la t0, forth
 	csrw mepc, t0
