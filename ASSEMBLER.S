@@ -1508,3 +1508,30 @@
 	LIT 0x1
 	TC W_JR
 	ENDW RET
+
+	DEFW L_MUL, "L.MUL,"
+	# ( RS2 RS1 RD -- )
+	LIT ((0x1 << 25) | (0X0 << 12) | 0B0110011)
+	RPUSH x1
+	FC R_TYPE
+	RPOP x1
+	TC LCOMMA
+	ENDW L_MUL
+
+	DEFW L_DIV, "L.DIV,"
+	# ( RS2 RS1 RD -- )
+	LIT ((0x1 << 25) | (0X4 << 12) | 0B0110011)
+	RPUSH x1
+	FC R_TYPE
+	RPOP x1
+	TC LCOMMA
+	ENDW L_DIV
+
+	DEFW L_REM, "L.REM,"
+	# ( RS2 RS1 RD -- )
+	LIT ((0x1 << 25) | (0X6 << 12) | 0B0110011)
+	RPUSH x1
+	FC R_TYPE
+	RPOP x1
+	TC LCOMMA
+	ENDW L_REM
