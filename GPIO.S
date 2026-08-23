@@ -95,7 +95,6 @@
 	ret
 	ENDW GPIO_OUT_STORE
 
-
 	DEFW GPIO_OUT_LOAD, "GPIO-OUT@"
 	# ( GPIO-NUM -- FLAG )
 	li x14, 0x60
@@ -129,3 +128,28 @@
 	# : TASK-BLINK BEGIN $3E8 DELAY $2C GPIO-OUT@ INVERT $2C GPIO-OUT! AGAIN ;
 	# ' TASK-BLINK USER-NEW .
 
+	DEFW GPIO_IN_LOAD, "GPIO-IN@"
+	# ( GPIO-NUM -- FLAG )
+	li x14, 0x60
+	rem x14, x15, x14
+	andi x13, x15, 0x1F
+	li x12, 0x18
+	blt x13, x12, 1f
+	# SKIP PIN-NUM HOLE
+	li x15, 0
+	ret
+1:
+	srli x13, x14, 5
+	slli x13, x13, 10
+	li x12, (GPIOA_BASE + R32_GPIO_INDR)
+	add x12, x12, x13
+	andi x14, x14, 0x1F
+	li x11, 1
+	sll x11, x11, x14
+	lw x10, 0(x12)
+	and x15, x10, x11
+	beqz x15, 2f
+	li x15, -1
+2:
+	ret
+	ENDW GPIO_IN_LOAD
