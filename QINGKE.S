@@ -44,7 +44,8 @@
 	DEFW PIFC_IRQ_ISEN, "PFIC-IRQ-EN?"
 	# ( IRQN -- FLAG )
 	li x14, (PFIC_BASE + R32_PFIC_ISR1)
-	srli x13, x15, 4
+	srli x13, x15, 5
+	slli x13, x13, 2
 	add x14, x14, x13
 	andi x13, x15, 0x1F
 	li x12, 1
@@ -62,7 +63,8 @@
 	# ( IRQN -- )
 	fence.i
 	li x14, (PFIC_BASE + R32_PFIC_IENR1)
-	srli x13, x15, 4
+	srli x13, x15, 5
+	slli x13, x13, 2
 	add x14, x14, x13
 	andi x13, x15, 0x1F
 	li x12, 1
@@ -77,7 +79,8 @@
 	# ( IRQN -- )
 	fence.i
 	li x14, (PFIC_BASE + R32_PFIC_IRER1)
-	srli x13, x15, 4
+	srli x13, x15, 5
+	slli x13, x13, 2
 	add x14, x14, x13
 	andi x13, x15, 0x1F
 	li x12, 1
