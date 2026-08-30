@@ -1,5 +1,18 @@
 * CH32X035 FORTH
 
+** DATASHEET
+
+https://www.wch.cn/downloads/CH32X035DS0_PDF.html
+
+https://www.wch.cn/downloads/CH32X035RM_PDF.html
+
+https://www.wch.cn/downloads/QingKeV4_Processor_Manual_PDF.html
+
+** VENDOR SDK
+
+IF YOU WANT ADD DRIVER IN THIS FORTH, YOU NEED READ:
+
+https://www.wch.cn/downloads/CH32X035EVT_ZIP.html
 
 ** CONNECT
 
