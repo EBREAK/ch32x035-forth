@@ -21,9 +21,13 @@ clean:
 
 flash:
 	wlink set-power disable3v3
+	wlink set-power disable5v
 	sleep 0.5
 	wlink set-power enable3v3
+	wlink set-power enable5v
 	wlink flash fw.hex
 	wlink set-power disable3v3
+	wlink set-power disable5v
 	sleep 0.5
 	wlink set-power enable3v3
+	wlink set-power enable5v
