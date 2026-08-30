@@ -276,11 +276,23 @@
 	ret
 	ENDW DIVID
 
+	DEFW UDIVID, "U/"
+	PPOP x14
+	divu x15, x14, x15
+	ret
+	ENDW UDIVID
+
 	DEFW MOD, "MOD"
 	PPOP x14
 	rem x15, x14, x15
 	ret
 	ENDW MOD
+
+	DEFW UMOD, "UMOD"
+	PPOP x14
+	remu x15, x14, x15
+	ret
+	ENDW UMOD
 
 	DEFW LSHIFT, "LSHIFT"
 	PPOP x14
