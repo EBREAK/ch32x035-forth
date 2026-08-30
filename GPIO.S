@@ -29,6 +29,25 @@
 	andi x13, x13, 0xF
 	lw x15, 4(x9)
 	addi x9, x9, 8
+
+	# ENABLE GPIO BANK CLOCK
+	li x12, RCC_BASE
+	lw x12, R32_RCC_APB2PRSTR(x12)
+	li x11, (1 << 2) # IOPARST BIT
+	srli x10, x14, 5
+	sll x11, x11, x10
+	xori x11, x11, -1
+	and x11, x12, x11
+	li x12, RCC_BASE
+	sw x11, R32_RCC_APB2PRSTR(x12)
+	lw x12, R32_RCC_APB2PCENR(x12)
+	li x11, (1 << 2) # IOPAEN BIT
+	srli x10, x14, 5
+	sll x11, x11, x10
+	or x11, x12, x11
+	li x12, RCC_BASE
+	sw x11, R32_RCC_APB2PCENR(x12)
+
 	andi x12, x14, 0x1F
 	li x11, 0x18
 	blt x12, x11, 1f
