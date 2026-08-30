@@ -15,6 +15,6 @@ HPRE_DIV_LUT:
 	lbu x13, 0(x12)
 	addi x13, x13, 1
 	li x15, (48 * 1000 * 1000) # HSI 48Mhz
-	div x15, x15, x13
+	divu x15, x15, x13
 	ret
 	ENDW SYSCLK_LOAD
