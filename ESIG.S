@@ -1,0 +1,67 @@
+	DEFW CHIP_VARIANT, "CHIP-VARIANT"
+	# ( -- C-ADDR COUNT )
+	addi x9, x9, -8
+	sw x15, 4(x9)
+	.PUSHSECTION .rodata
+STR_5R8T6:
+	.ASCII "5R8T6"
+STR_5C8T6:
+	.ASCII "5C8T6"
+STR_5G8U6:
+	.ASCII "5G8U6"
+STR_5G8R6:
+	.ASCII "5G8R6"
+STR_5F8U6:
+	.ASCII "5F8U6"
+STR_5F7P6:
+	.ASCII "5F7P6"
+STR_5D8U6:
+	.ASCII "5D8U6"
+STR_3F8P6:
+	.ASCII "3F8P6"
+STR_VARIANT_UNKNOWN:
+	.ASCII "?????"
+	.POPSECTION
+	li x15, 5
+	la x14, STR_VARIANT_UNKNOWN
+	li x13, ESIG_BASE
+	lw x12, R32_ESIG_VARIANT(x13)
+	li x11, ESIG_VARIANT_MASK
+	and x12, x12, x11
+	li x11, 0x03510600
+	bne x12, x11, 1f
+	la x14, STR_5C8T6
+	j 2f
+1:
+	li x11, 0x03560600
+	bne x12, x11, 1f
+	la x14, STR_5G8U6
+	j 2f
+1:
+	li x11, 0x035B0600
+	bne x12, x11, 1f
+	la x14, STR_5G8R6
+	j 2f
+1:
+	li x11, 0x035E0600
+	bne x12, x11, 1f
+	la x14, STR_5F8U6
+	j 2f
+1:
+	li x11, 0x03570600
+	bne x12, x11, 1f
+	la x14, STR_5F7P6
+	j 2f
+1:
+	li x11, 0x035A0600
+	bne x12, x11, 1f
+	la x14, STR_3F8P6
+	j 2f
+1:
+	li x11, 0x03500600
+	bne x12, x11, 2f
+	la x14, STR_5R8T6
+2:
+	sw x14, 0(x9)
+	ret
+	ENDW CHIP_VARIANT
