@@ -18,5 +18,45 @@ https://www.wch.cn/downloads/CH32X035EVT_ZIP.html
 
 FORTH UART CONSOLE PIN:
 
+#+BEGIN_SRC text
 PA2 TX
 PA3 RX
+#+END_SRC
+
+** DEBUG
+
+YOU CAN USE WLINK + OPENOCD + GDB DEBUG:
+
+DEBUG PIN:
+
+#+BEGIN_SRC text
+PC18 DIO
+PC19 DCK
+#+END_SRC
+
+INSTALL DEBUG SERVER:
+
+#+BEGIN_SRC
+git clone --depth=1 -b wch-k3 https://github.com/EBREAK/openocd
+cd openocd
+./bootstrap
+make
+make install
+sudo cp contrib/60-openocd.rules /etc/udev/rules.d/
+sudo udevadm control -R
+# RECONNECT YOUR WCHLINKE
+#+END_SRC
+
+LAUNCH DEBUG SERVER:
+
+#+BEGIN_SRC shell
+make ocd
+#+END_SRC
+
+LAUNCH DEBUG CLIENT:
+
+#+BEGIN_SRC shell
+make db
+#+END_SRC
+
+

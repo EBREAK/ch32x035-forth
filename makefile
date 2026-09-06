@@ -1,8 +1,9 @@
-CROSS_COMPILE ?= riscv32-qingke-elf-
+CROSS_COMPILE ?= riscv64-none-elf-
 CC = $(CROSS_COMPILE)gcc
 OD = $(CROSS_COMPILE)objdump
 OC = $(CROSS_COMPILE)objcopy
 SZ = $(CROSS_COMPILE)size
+DB = $(CROSS_COMPILE)gdb
 
 CFLAGS += \
 	-march=rv32imac_zicsr_zifencei -mabi=ilp32 \
@@ -31,3 +32,9 @@ flash:
 	sleep 0.5
 	wlink set-power enable3v3
 	wlink set-power enable5v
+
+ocd:
+	openocd -f interface/wlink.cfg -f target/wch-riscv.cfg
+
+db:
+	$(DB) fw.elf
