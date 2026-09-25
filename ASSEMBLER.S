@@ -1216,6 +1216,11 @@
 	TC WCOMMA
 	ENDW W_EBREAK
 
+	DEFW W_NOP, "W.NOP,"
+	LIT 0x0001
+	TC WCOMMA
+	ENDW W_NOP
+
 	DEFW CALL, "CALL,"
 	# ( ADDR -- )
 	# L.JALR,          : x0 +/- 2046    x0 +/- ~2KiB
