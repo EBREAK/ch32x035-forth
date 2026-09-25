@@ -1580,3 +1580,153 @@
 	RPOP x1
 	TC LCOMMA
 	ENDW L_CSRR
+
+	DEFW IS_RVC, "RVC?"
+	# ( VAL -- FLAG )
+	andi x14, x15, 0x3
+	xori x14, x14, 0x3
+	li x15, 0
+	beqz x14, 1f
+	li x15, -1
+1:
+	ret
+	ENDW IS_RVC
+
+	DEFW LASTI, "LASTI"
+	# ( START-ADDR END-ADDR -- LAST-INSTRUCTION-ADDR )
+	mv x14, x15
+	lw x15, 0(x9)
+	addi x9, x9, 4
+1:
+	lhu x13, 0(x15)
+	andi x12, x13, 0x3
+	xori x12, x12, 0x3
+	bnez x12, 2f
+	addi x15, x15, 2
+2:
+	addi x15, x15, 2
+	bltu x15, x14, 1b
+	andi x12, x13, 0x3
+	xori x12, x12, 0x3
+	bnez x12, 1f
+	addi x15, x15, -2
+1:
+	addi x15, x15, -2
+	ret
+	ENDW LASTI
+
+	DEFW INSTRLOAD, "INSTR@"
+	# ( ADDR -- INSTRUCTION )
+	mv x14, x15
+	lhu x13, 0(x14)
+	andi x12, x13, 0x3
+	xori x12, x12, 0x3
+	li x11, 0
+	bnez x12, 1f
+	lhu x11, 2(x14)
+	slli x11, x11, 16
+1:
+	or x15, x13, x11
+	ret
+	ENDW INSTRLOAD
+
+	DEFW INSTRLEN, "INSTRLEN"
+	# ( INSTR -- BYTES )
+	andi x14, x15, 0x3
+	xori x14, x14, 0x3
+	li x15, 4
+	beqz x14, 1f
+	addi x15, x15, -2
+1:
+	ret
+	ENDW INSTRLEN
+
+	DEFW IS_W_JAL, "W.JAL?"
+	# ( INSTR -- FLAG )
+	li x14, 0B1110000000000011
+	li x13, 0B0010000000000001
+	and x12, x15, x14
+	li x15, -1
+	beq x12, x13, 1f
+	li x15, 0
+1:
+	ret
+	ENDW IS_W_JAL
+
+	DEFW IS_L_JAL, "L.JAL?"
+	# ( INSTR -- FLAG )
+	andi x14, x15, 0B1111111
+	li x15, -1
+	xori x14, x14, 0B1101111
+	beqz x14, 1f
+	li x15, 0
+1:
+	ret
+	ENDW IS_L_JAL
+
+	DEFW IS_L_JALR, "L.JALR?"
+	# ( INSTR -- FLAG )
+	li x14, (0x7 << 12) | 0x7F
+	li x13, (0x0 << 12) | 0B1100111
+	and x12, x15, x14
+	li x15, -1
+	beq x12, x13, 1f
+	li x15, 0
+1:
+	ret
+	ENDW IS_L_JALR
+
+	DEFW IS_L_AUIPC, "L.AUIPC?"
+	# ( INSTR -- FLAG )
+	andi x14, x15, 0x7F
+	xori x14, x14, 0B0010111
+	li x15, -1
+	beqz x14, 1f
+	li x15, 0
+1:
+	ret
+	ENDW IS_L_AUIPC
+
+	DEFW DIS_CALL, "DIS-CALL"
+	# ( INSTR-ADDR -- ADDR )
+	RPUSH x1
+	FC DUP, INSTRLOAD, DUP, IS_W_JAL
+	ZBR 1f
+	FC DIS_CJ_TYPE, DROP
+	RPOP x1
+	TC PLUS
+1:
+	FC DUP, IS_L_JAL
+	ZBR 1f
+	FC DIS_J_TYPE, 2DROP
+	RPOP x1
+	TC PLUS
+1:
+	FC DUP, IS_L_JALR
+	FC OVER, DIS_I_TYPE, 2DROP, NIP
+	FC EQZ, AND
+	ZBR 1f
+	FC DIS_I_TYPE, 3DROP
+	RPOP x1
+	TC NIP
+1:
+	FC DUP, IS_L_AUIPC
+	ZBR 1f
+	FC DIS_U_TYPE, 2DROP, OVER
+	FC 0X4, PLUS, INSTRLOAD, DIS_I_TYPE
+	FC 3DROP, PLUS
+	RPOP x1
+	TC PLUS
+1:
+	FC DUP, IS_L_JALR
+	ZBR 1f
+	FC OVER, 0X4, MINUS, INSTRLOAD
+	FC DIS_U_TYPE, 2DROP, SWAP
+	FC DIS_I_TYPE, 3DROP, PLUS
+	FC PLUS, 0X4
+	RPOP x1
+	TC MINUS
+1:
+	# TODO, ABORT
+	c.unimp
+	ENDW DIS_CALL
