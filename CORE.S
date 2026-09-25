@@ -1,16 +1,17 @@
+	.PUSHSECTION .text.forth
+DOCONST:
+	PPUSH x15
+	mv x15, x14
+	ret
+	.POPSECTION
+
 	.IRP VAL, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
-		DEFW 0X\VAL, "$\VAL"
-		LIT 0X\VAL
-		ret
-		ENDW 0X\VAL
+		DEFCONST 0X\VAL, "$\VAL", 0X\VAL
 	.ENDR
 
 	.IRP HI, 1
 		.IRP LO, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F
-			DEFW 0X\HI\LO, "$\HI\LO"
-			LIT 0X\HI\LO
-			ret
-			ENDW 0X\HI\LO
+			DEFCONST 0X\HI\LO, "$\HI\LO", 0X\HI\LO
 		.ENDR
 	.ENDR
 
@@ -390,9 +391,8 @@
 FORTH_DP:
 	.4BYTE _forth_code_ram_start
 	.POPSECTION
-	PPUSH x15
-	la x15, FORTH_DP
-	ret
+	la x14, FORTH_DP
+	j DOCONST
 	ENDW DP
 
 	DEFW HERE, "HERE"
