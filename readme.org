@@ -19,6 +19,8 @@ https://www.wch.cn/downloads/CH32X035EVT_ZIP.html
 FORTH UART CONSOLE PIN:
 
 #+BEGIN_SRC text
+PA0 CTS
+PA1 RTS
 PA2 TX
 PA3 RX
 #+END_SRC

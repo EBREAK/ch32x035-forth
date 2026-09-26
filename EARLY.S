@@ -102,6 +102,8 @@ AFIO_CLK_ON:
 	li x10, GPIOA_BASE
 
 USART2_PIN_MODE:
+	li x11, (1 << 3) | (1 << (0 + 16))
+	sw x11, R32_GPIO_BSHR(x10)
 	lw x11, R32_GPIO_CFGLR(x10)
 	li x12, ~(GPIO_MODE_MASK << 8) # PA2 TX
 	and x11, x11, x12
@@ -110,6 +112,14 @@ USART2_PIN_MODE:
 	li x12, ~(GPIO_MODE_MASK << 12) # PA3 RX
 	and x11, x11, x12
 	li x12, (GPIO_MODE_FLOATIN << 12)
+	or x11, x11, x12
+	li x12, ~(GPIO_MODE_MASK << 0) # PA0 CTS
+	and x11, x11, x12
+	li x12, (GPIO_MODE_PUDIN << 0)
+	or x11, x11, x12
+	li x12, ~(GPIO_MODE_MASK << 4) # PA1 RTS
+	and x11, x11, x12
+	li x12, (GPIO_MODE_MUPPOUT << 4)
 	or x11, x11, x12
 	sw x11, R32_GPIO_CFGLR(x10)
 
@@ -129,6 +139,8 @@ USART2_INIT:
 	.SET USART_BAUD_115200, ((26 << 4) | (1 << 0))
 	li x12, USART_BAUD_115200
 	sw x12, R32_USART_BRR(x10)
+	li x11, USART_RTSE | USART_CTSE
+	sw x11, R32_USART_CTLR3(x10)
 	li x11, USART_UE | USART_TE | USART_RE
 	sw x11, R32_USART_CTLR1(x10)
 
