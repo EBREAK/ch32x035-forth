@@ -30,6 +30,7 @@ _forth_dict_rom_start:
 	.POPSECTION
 
 	.INCLUDE "CORE.S"
+	.INCLUDE "MATH.S"
 	.INCLUDE "IO.S"
 	.INCLUDE "DEBUG.S"
 	.INCLUDE "STRING.S"
