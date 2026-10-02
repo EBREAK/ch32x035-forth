@@ -336,6 +336,22 @@ DOCONST:
 	ret
 	ENDW NEGATE
 
+	DEFW MIN, "MIN"
+	PPOP x14
+	bgt x14, x15, 1f
+	mv x15, x14
+1:
+	ret
+	ENDW MIN
+
+	DEFW MAX, "MAX"
+	PPOP x14
+	blt x14, x15, 1f
+	mv x15, x14
+1:
+	ret
+	ENDW MAX
+
 	DEFW CLOAD, "C@"
 	lbu x15, 0(x15)
 	ret
