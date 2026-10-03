@@ -1,6 +1,6 @@
-* CH32X035 FORTH
+# CH32X035 FORTH
 
-** FEATURES
+## FEATURES
 
 - STC FORTH, ~16KiB FLASH
   - TOS CACHED IN X15 REGISTER
@@ -21,7 +21,7 @@
   - WORD USER-NEW: CREATE NEW TASK
 - WORD ISP-RESET: ENTER WCH ISP BOOTLOADER BY SOFTWARE
 
-** DATASHEET
+## DATASHEET
 
 https://www.wch.cn/downloads/CH32X035DS0_PDF.html
 
@@ -29,13 +29,13 @@ https://www.wch.cn/downloads/CH32X035RM_PDF.html
 
 https://www.wch.cn/downloads/QingKeV4_Processor_Manual_PDF.html
 
-** VENDOR SDK
+## VENDOR SDK
 
 IF YOU WANT ADD DRIVER IN THIS FORTH, YOU NEED READ:
 
 https://www.wch.cn/downloads/CH32X035EVT_ZIP.html
 
-** CONNECT
+## CONNECT
 
 FORTH CONSOLE IS ON USB CDC ACM 0
 
@@ -43,34 +43,34 @@ FORTH CONSOLE IS ON USB CDC ACM 0
 
 2. USE BAUD 6666 OPEN PORT
 
-#+BEGIN_SRC shell
+```
 picocom --echo -b 6666 /dev/ttyACMX
-#+END_SRC
+```
 
-** ENTER ISP DOWNLOAD MODE
+## ENTER ISP DOWNLOAD MODE
 
 TYPE THESE WORD INTO REPL
 
-#+BEGIN_SRC forth
+```
 ISP-RESET
-#+END_SRC
+```
 
 THEN YOU CAN USE WCHISP TOOL DOWNLOAD NEW FIRMWARE
 
-** DEBUG
+## DEBUG
 
 YOU CAN USE WLINK + OPENOCD + GDB DEBUG:
 
 DEBUG PIN:
 
-#+BEGIN_SRC text
+```
 PC18 DIO
 PC19 DCK
-#+END_SRC
+```
 
 INSTALL DEBUG SERVER:
 
-#+BEGIN_SRC
+```
 git clone --depth=1 -b wch-k3 https://github.com/EBREAK/openocd
 cd openocd
 ./bootstrap
@@ -79,18 +79,20 @@ make install
 sudo cp contrib/60-openocd.rules /etc/udev/rules.d/
 sudo udevadm control -R
 # RECONNECT YOUR WCHLINKE
-#+END_SRC
+```
 
 LAUNCH DEBUG SERVER:
 
-#+BEGIN_SRC shell
+```
 make ocd
-#+END_SRC
+```
 
 LAUNCH DEBUG CLIENT:
 
-#+BEGIN_SRC shell
+```
 make db
-#+END_SRC
+```
 
+# LICENSE
 
+MIT
