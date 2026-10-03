@@ -1,0 +1,25 @@
+	DEFW IWDG_INIT, "IWDG-INIT"
+	# ( -- )
+	li x14, IWDG_BASE
+	li x13, IWDG_KEY_CHANGE
+	sh x13, R16_IWDG_CTLR(x14)
+1:
+	lhu x13, R16_IWDG_STATR(x14)
+	andi x13, x13, 0x3
+	bnez x13, 1b
+	li x13, IWDG_PR_DIV256
+	sh x13, R16_IWDG_PSCR(x14)
+	li x13, 0xFFF
+	sh x13, R16_IWDG_RLDR(x14)
+	li x13, IWDG_KEY_START
+	sh x13, R16_IWDG_CTLR(x14)
+	TC IWDG_FEED
+	ENDW IWDG_INIT
+
+	DEFW IWDG_FEED, "IWDG-FEED"
+	# ( -- )
+	li x14, IWDG_BASE
+	li x13, IWDG_KEY_FEED
+	sh x13, R16_IWDG_CTLR(x14)
+	ret
+	ENDW IWDG_FEED
